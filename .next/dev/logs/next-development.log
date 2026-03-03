@@ -1,0 +1,396 @@
+[00:00:01.269] Server  LOG     ✓ Ready in 893ms
+[00:00:15.185] Server  ERROR   ⨯ ./app/page.tsx:3:7
+Parsing ecmascript source code failed
+  1 | "use client";
+  2 |
+> 3 | mport { useRouter, useSearchParams } from "next/navigation";
+    |       ^
+  4 | import { useState, useEffect, useRef, Suspense, use } from "react";
+  5 |
+  6 | interface Particle {
+
+Expected ';', '}' or <eof>
+
+
+[00:00:15.599] Browser ERROR   uncaughtError: Error: ./app/page.tsx:3:7
+Parsing ecmascript source code failed
+  1 | "use client";
+  2 |
+> 3 | mport { useRouter, useSearchParams } from "next/navigation";
+    |       ^
+  4 | import { useState, useEffect, useRef, Suspense, use } from "react";
+  5 |
+  6 | interface Particle {
+
+Expected ';', '}' or <eof>
+
+
+[00:00:15.784] Browser ERROR   ./app/page.tsx:3:7
+Parsing ecmascript source code failed
+  1 | "use client";
+  2 |
+> 3 | mport { useRouter, useSearchParams } from "next/navigation";
+    |       ^
+  4 | import { useState, useEffect, useRef, Suspense, use } from "react";
+  5 |
+  6 | interface Particle {
+
+Expected ';', '}' or <eof>
+[00:00:16.420] Browser ERROR   ./app/page.tsx:3:7
+Parsing ecmascript source code failed
+  1 | "use client";
+  2 |
+> 3 | mport { useRouter, useSearchParams } from "next/navigation";
+    |       ^
+  4 | import { useState, useEffect, useRef, Suspense, use } from "react";
+  5 |
+  6 | interface Particle {
+
+Expected ';', '}' or <eof>
+[00:00:21.308] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:21.726] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <RedirectBoundary>
+      <RedirectErrorBoundary router={{...}}>
+        <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} segmentPath={[...]} ...>
+          <SegmentViewNode type="page" pagePath="page.tsx">
+            <SegmentTrieNode>
+            <ClientPageRoot Component={function Home} serverProvidedParams={{...}}>
+              <Home params={Promise} searchParams={Promise}>
+                <Suspense fallback={<div>}>
+                  <HomeContent>
+                    <style>
+                    <canvas>
+                    <div>
+                    <div>
+                    <div>
+                    <div className="page">
+                      <div className="content">
+                        <nav>
+                        <section className="hero">
+                          <div>
+                          <h1>
+                          <p>
+                          <div className="cta-box">
+                            <button
+                              className="cta-create"
+                              onClick={function onClick}
+-                             fdprocessedid="l38dyg"
+                            >
+                            <div>
+                            <div className="play-row">
+                              <input
+                                className="play-input"
+                                type="text"
+                                placeholder="Enter Game ID (e.g. ABC-123)"
+                                value=""
+                                readOnly={false}
+                                onChange={function onChange}
+                                onKeyDown={function onKeyDown}
+-                               fdprocessedid="1ogsje"
+                              >
+                              <button
+                                className="play-btn"
+                                onClick={function onClick}
+-                               fdprocessedid="sxb5vh"
+                              >
++                               Play →
+                        <div>
+                        <section className="section">
+                          <div>
+                          <h2>
+                          <div className="cards-grid">
+                            <div className="feature-card" style={{...}} onMouseEnter={function onMouseEnter} ...>
+                              <span>
+                              <div>
+                              <div>
+                              <button
+                                className="card-action"
+                                style={{color:"#a78bfa"}}
+                                onClick={function onClick}
+-                               fdprocessedid="lsukxq"
+                              >
++                               Start Creating →
+                            ...
+                        ...
+                      ...
+          ...
+        ...
+
+[00:00:27.860] Server  LOG     ✓ Compiled in 22ms
+[00:00:27.961] Browser ERROR   ./app/page.tsx:7:3
+Parsing ecmascript source code failed
+   5 |
+   6 | interface Particle {
+>  7 |   : number;
+     |   ^
+   8 |   y: number;
+   9 |   r: number;
+  10 |   dx: number;
+
+Expected ident
+
+Import traces:
+  Client Component Browser:
+    ./app/page.tsx [Client Component Browser]
+    ./app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/page.tsx [Client Component SSR]
+    ./app/page.tsx [Server Component]
+[00:03:23.621] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:03:24.017] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <RedirectBoundary>
+      <RedirectErrorBoundary router={{...}}>
+        <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} segmentPath={[...]} ...>
+          <SegmentViewNode type="page" pagePath="page.tsx">
+            <SegmentTrieNode>
+            <ClientPageRoot Component={function Home} serverProvidedParams={{...}}>
+              <Home params={Promise} searchParams={Promise}>
+                <Suspense fallback={<div>}>
+                  <HomeContent>
+                    <style>
+                    <canvas>
+                    <div>
+                    <div>
+                    <div>
+                    <div className="page">
+                      <div className="content">
+                        <nav>
+                        <section className="hero">
+                          <div>
+                          <h1>
+                          <p>
+                          <div className="cta-box">
+                            <button
+                              className="cta-create"
+                              onClick={function onClick}
+-                             fdprocessedid="r9a0cb"
+                            >
+                            <div>
+                            <div className="play-row">
+                              <input
+                                className="play-input"
+                                type="text"
+                                placeholder="Enter Game ID (e.g. ABC-123)"
+                                value=""
+                                readOnly={false}
+                                onChange={function onChange}
+                                onKeyDown={function onKeyDown}
+-                               fdprocessedid="z2bd4q"
+                              >
+                              <button
+                                className="play-btn"
+                                onClick={function onClick}
+-                               fdprocessedid="dl92ma"
+                              >
++                               Play →
+                        <div>
+                        <section className="section">
+                          <div>
+                          <h2>
+                          <div className="cards-grid">
+                            <div className="feature-card" style={{...}} onMouseEnter={function onMouseEnter} ...>
+                              <span>
+                              <div>
+                              <div>
+                              <button
+                                className="card-action"
+                                style={{color:"#a78bfa"}}
+                                onClick={function onClick}
+-                               fdprocessedid="pqdynw"
+                              >
++                               Start Creating →
+                            ...
+                        ...
+                      ...
+          ...
+        ...
+
+[00:03:26.604] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:03:26.987] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <RedirectBoundary>
+      <RedirectErrorBoundary router={{...}}>
+        <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} segmentPath={[...]} ...>
+          <SegmentViewNode type="page" pagePath="page.tsx">
+            <SegmentTrieNode>
+            <ClientPageRoot Component={function Home} serverProvidedParams={{...}}>
+              <Home params={Promise} searchParams={Promise}>
+                <Suspense fallback={<div>}>
+                  <HomeContent>
+                    <style>
+                    <canvas>
+                    <div>
+                    <div>
+                    <div>
+                    <div className="page">
+                      <div className="content">
+                        <nav>
+                        <section className="hero">
+                          <div>
+                          <h1>
+                          <p>
+                          <div className="cta-box">
+                            <button
+                              className="cta-create"
+                              onClick={function onClick}
+-                             fdprocessedid="zxdpy"
+                            >
+                            <div>
+                            <div className="play-row">
+                              <input
+                                className="play-input"
+                                type="text"
+                                placeholder="Enter Game ID (e.g. ABC-123)"
+                                value=""
+                                readOnly={false}
+                                onChange={function onChange}
+                                onKeyDown={function onKeyDown}
+-                               fdprocessedid="n27sr9"
+                              >
+                              <button
+                                className="play-btn"
+                                onClick={function onClick}
+-                               fdprocessedid="l4r8fa"
+                              >
++                               Play →
+                        <div>
+                        <section className="section">
+                          <div>
+                          <h2>
+                          <div className="cards-grid">
+                            <div className="feature-card" style={{...}} onMouseEnter={function onMouseEnter} ...>
+                              <span>
+                              <div>
+                              <div>
+                              <button
+                                className="card-action"
+                                style={{color:"#a78bfa"}}
+                                onClick={function onClick}
+-                               fdprocessedid="o4ykic"
+                              >
++                               Start Creating →
+                            ...
+                        ...
+                      ...
+          ...
+        ...
+
+[00:05:24.773] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:40.502] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:40.873] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <RedirectBoundary>
+      <RedirectErrorBoundary router={{...}}>
+        <InnerLayoutRouter url="/" tree={[...]} params={{}} cacheNode={{rsc:<Fragment>, ...}} segmentPath={[...]} ...>
+          <SegmentViewNode type="page" pagePath="page.tsx">
+            <SegmentTrieNode>
+            <ClientPageRoot Component={function Home} serverProvidedParams={{...}}>
+              <Home params={Promise} searchParams={Promise}>
+                <Suspense fallback={<div>}>
+                  <HomeContent>
+                    <style>
+                    <canvas>
+                    <div>
+                    <div>
+                    <div>
+                    <div className="page">
+                      <div className="content">
+                        <nav>
+                        <section className="hero">
+                          <div>
+                          <h1>
+                          <p>
+                          <div className="cta-box">
+                            <button
+                              className="cta-create"
+                              onClick={function onClick}
+-                             fdprocessedid="v2ml"
+                            >
+                            <div>
+                            <div className="play-row">
+                              <input
+                                className="play-input"
+                                type="text"
+                                placeholder="Enter Game ID (e.g. ABC-123)"
+                                value=""
+                                readOnly={false}
+                                onChange={function onChange}
+                                onKeyDown={function onKeyDown}
+-                               fdprocessedid="9s9rmo"
+                              >
+                              <button
+                                className="play-btn"
+                                onClick={function onClick}
+-                               fdprocessedid="60ieoc"
+                              >
++                               Play →
+                        <div>
+                        <section className="section">
+                          <div>
+                          <h2>
+                          <div className="cards-grid">
+                            <div className="feature-card" style={{...}} onMouseEnter={function onMouseEnter} ...>
+                              <span>
+                              <div>
+                              <div>
+                              <button
+                                className="card-action"
+                                style={{color:"#a78bfa"}}
+                                onClick={function onClick}
+-                               fdprocessedid="n00gpc"
+                              >
++                               Start Creating →
+                            ...
+                        ...
+                      ...
+          ...
+        ...
+
+[00:05:42.804] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold

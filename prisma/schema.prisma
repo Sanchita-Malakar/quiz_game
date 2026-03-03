@@ -1,0 +1,49 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Changed from sqlite
+  url      = env("DATABASE_URL")
+}
+
+model Quiz {
+  id        String   @id @default(cuid())
+  title     String
+  author    String
+  totalTime Int
+  createdAt DateTime @default(now())
+  questions Question[]
+  results   PlayerResult[]
+}
+
+model Question {
+  id        String   @id @default(cuid())
+  quizId    String
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  text      String
+  image     String?  // Stores Base64 string
+  options   Option[]
+}
+
+model Option {
+  id         String   @id @default(cuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+  text       String
+  isCorrect  Boolean
+}
+
+model PlayerResult {
+  id         String   @id @default(cuid())
+  quizId     String
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+  playerName String
+  score      Int
+  total      Int
+  timeTaken  Int // average seconds per question
+  avatar     String
+  createdAt  DateTime @default(now())
+}
