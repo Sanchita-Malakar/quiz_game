@@ -1,0 +1,17 @@
+/* @layer base */
+@tailwind base;
+/* @layer components */
+@tailwind components;
+/* @layer utilities */
+@tailwind utilities;
+
+:root {
+  --background: #060612;
+  --foreground: #f8f8ff;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
