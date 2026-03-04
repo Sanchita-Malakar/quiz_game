@@ -6,7 +6,6 @@ generator client {
 
 datasource db {
   provider = "postgresql" // Changed from sqlite
-  url      = env("DATABASE_URL")
 }
 
 model Quiz {
