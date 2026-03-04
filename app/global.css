@@ -1,17 +1,48 @@
-/* @layer base */
+/* app/globals.css */
+
+/* Tailwind CSS Directives */
 @tailwind base;
-/* @layer components */
 @tailwind components;
-/* @layer utilities */
 @tailwind utilities;
 
+/* CSS Variables */
 :root {
   --background: #060612;
   --foreground: #f8f8ff;
 }
 
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #060612;
+    --foreground: #f8f8ff;
+  }
+}
+
+/* Base Styles */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.3);
+  border-radius: 99px;
 }
