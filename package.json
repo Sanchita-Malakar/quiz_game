@@ -24,5 +24,8 @@
     "postcss": "^8.5.8",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.0.0"
+  },
+  "prisma": {
+    "accelerateUrl": "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza19aY2U0ZGlsd1h4SVdpN0pPdlBRSGoiLCJhcGlfa2V5IjoiMDFLSldSVEREWVQ4VkFaMjQ0Tk5TREpOUzUiLCJ0ZW5hbnRfaWQiOiIwNTFkNGY0ZWFjNzRlNTNiZDJmYTk0MDEzNzJkNDVhYjEyYzUwYTNiZWE3MGIzMjFmMzU1MjQ2YWY4ODZkZTJjIiwiaW50ZXJuYWxfc2VjcmV0IjoiNmJiZGMxMTktZGQzNC00OGRjLWEwZTgtMzNkMGI5NjgwNzg5In0.Boiom3kghl-qBd7siGwwn_sMlZYl2bG5hNGYnGSpGbQ"
   }
 }
