@@ -1,13 +1,20 @@
 // app/api/quizzes/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { createClient } from "@supabase/supabase-js";
+
+// Initialize Supabase Admin Client (Server-side only)
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // Use service role key for server-side verification
+);
 
 export async function POST(req: Request) {
   try {
-    // Parse request body
+    // 1. Parse request body
     const body = await req.json();
 
-    // Validate required fields
+    // 2. Validate required fields
     if (!body.title || !body.questions || body.questions.length === 0) {
       return NextResponse.json(
         { error: "Missing required fields: title and questions" },
@@ -15,7 +22,20 @@ export async function POST(req: Request) {
       );
     }
 
-    // Validate questions structure
+    // 3. Authenticate the User (Get User ID from Header)
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ error: "Unauthorized: Missing token" }, { status: 401 });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
+
+    if (error || !user) {
+      return NextResponse.json({ error: "Unauthorized: Invalid token" }, { status: 401 });
+    }
+
+    // 4. Validate questions structure
     for (const question of body.questions) {
       if (!question.question || !question.options || question.options.length === 0) {
         return NextResponse.json(
@@ -25,14 +45,15 @@ export async function POST(req: Request) {
       }
     }
 
-    // Use transaction to ensure data integrity (all or nothing)
+    // 5. Use transaction to ensure data integrity
     const result = await prisma.$transaction(async (tx: any) => {
-      // 1. Create the Quiz
+      // 6. Create the Quiz (NOW WITH userId)
       const quiz = await tx.quiz.create({
         data: {
           title: body.title,
           author: body.author || "Quiz Creator",
-          totalTime: body.totalTime || 20, // Default 20 seconds per question
+          userId: user.id, // ✅ CRITICAL: Pass the authenticated user's ID
+          totalTime: body.totalTime || 20,
           questions: {
             create: body.questions.map((q: any) => ({
               text: q.question,
@@ -58,7 +79,6 @@ export async function POST(req: Request) {
       return quiz.id;
     });
 
-    // Return success response with quiz ID
     return NextResponse.json({
       success: true,
       quizId: result,
@@ -66,24 +86,6 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("Quiz creation error:", error);
-    
-    // Handle specific Prisma errors
-    if (error instanceof Error) {
-      if (error.message.includes("foreign key constraint")) {
-        return NextResponse.json(
-          { error: "Database constraint violation" },
-          { status: 400 }
-        );
-      }
-      if (error.message.includes("unique constraint")) {
-        return NextResponse.json(
-          { error: "Quiz with this title already exists" },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Generic error response
     return NextResponse.json(
       { error: "Failed to create quiz. Please try again." },
       { status: 500 }

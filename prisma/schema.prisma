@@ -13,6 +13,7 @@ model Quiz {
   title     String
   author    String
   totalTime Int
+  userId    String   // NEW: Store the Auth User ID (UUID) for RLS
   createdAt DateTime @default(now())
   questions Question[]
   results   PlayerResult[]
@@ -35,14 +36,16 @@ model Option {
   isCorrect  Boolean
 }
 
+
 model PlayerResult {
   id         String   @id @default(cuid())
   quizId     String
   quiz       Quiz     @relation(fields: [quizId], references: [id])
+  userId     String?  // ← Remove the ? from the field name
   playerName String
   score      Int
   total      Int
-  timeTaken  Int // average seconds per question
+  timeTaken  Int
   avatar     String
   createdAt  DateTime @default(now())
 }

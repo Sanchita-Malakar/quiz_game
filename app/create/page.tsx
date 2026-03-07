@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useRef, useCallback } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -36,12 +37,13 @@ const isQuestionComplete = (q: Question): boolean =>
   q.question.trim().length > 0 &&
   q.options.every((o) => o.text.trim().length > 0) &&
   q.correctIndex !== null &&
-  q.correctIndex !== undefined;
+  q.correctIndex !== -1;
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function CreatePage() {
   const router = useRouter();
+  const supabase = createClient();
 
   const [quizTitle, setQuizTitle] = useState<string>("");
   const [questions, setQuestions] = useState<Question[]>([makeQuestion()]);
@@ -130,42 +132,57 @@ export default function CreatePage() {
   const canGenerate = quizTitle.trim().length > 0 && allQuestionsComplete;
 
   // ── Generate Quiz ────────────────────────────────────────────────────────
-      //backend call//
-
   const generateLink = async () => {
-  if (!canGenerate) return;
+    if (!canGenerate) return;
 
-  setGenerating(true);
+    setGenerating(true);
 
-  try {
-    const res = await fetch("/api/quizzes", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: quizTitle,
-        questions: questions.map((q) => ({
-          question: q.question,
-          options: q.options.map((o) => o.text),
-          correctIndex: q.correctIndex,
-          image: q.imagePreview, // base64
-        })),
-      }),
-    });
+    try {
+      // 1. Get the current session from Supabase
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-    if (!res.ok) throw new Error("Failed to create quiz");
+      if (sessionError || !session) {
+        alert("Please log in to create a quiz");
+        router.push("/login"); // Redirect to login page
+        return;
+      }
 
-    const data = await res.json();
+      // 2. Make the API call with Authorization header
+      const res = await fetch("/api/quizzes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`, // ✅ Send auth token
+        },
+        body: JSON.stringify({
+          title: quizTitle,
+          author: "Quiz Creator", // Optional: you can get this from user profile
+          questions: questions.map((q) => ({
+            question: q.question,
+            options: q.options.map((o) => o.text),
+            correctIndex: q.correctIndex,
+            image: q.imagePreview, // base64
+          })),
+        }),
+      });
 
-    setGeneratedLink(`${window.location.origin}/quiz/${data.quizId}`);
-  } catch (err) {
-    alert("Something went wrong while creating quiz");
-    console.error(err);
-  } finally {
-    setGenerating(false);
-  }
-};
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to create quiz");
+      }
 
-// end//
+      const data = await res.json();
+
+      // 3. Set the generated link
+      setGeneratedLink(`${window.location.origin}/quiz/${data.quizId}`);
+      alert("Quiz created successfully!");
+    } catch (err) {
+      alert("Something went wrong while creating quiz");
+      console.error(err);
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const copyLink = async () => {
     if (!generatedLink) return;
@@ -358,11 +375,6 @@ export default function CreatePage() {
           font-family: 'DM Sans', sans-serif;
           position: relative;
         }
-        .tab.active {
-          background: rgba(99,102,241,0.2);
-          border-color: rgba(99,102,241,0.45);
-          color: #a5b4fc;
-        }
         .tab.done::after {
           content: '✓';
           position: absolute;
@@ -378,6 +390,10 @@ export default function CreatePage() {
           font-weight: 700;
           line-height: 14px;
           text-align: center;
+        }
+                .tab:hover {
+          border-color: rgba(99,102,241,0.4);
+          color: #a5b4fc;
         }
         .tab-add {
           padding: 7px 12px;
@@ -754,7 +770,6 @@ export default function CreatePage() {
       </div>
 
       <div className="page">
-
         {/* Nav */}
         <nav className="nav">
           <span className="nav-logo" onClick={() => router.push("/")}>Query Game</span>
@@ -763,10 +778,9 @@ export default function CreatePage() {
 
         {/* Card */}
         <div className="card">
-
           {/* Heading */}
           <div className="title-block">
-            <h1 className="page-heading">
+                        <h1 className="page-heading">
               Build your <span className="accent">quiz</span>
             </h1>
             <p className="page-sub">Add questions, set answers, share with friends.</p>
