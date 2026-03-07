@@ -1,8 +1,27 @@
+// app/create/page.tsx
 "use client";
 
 import { useRouter } from "next/navigation";
 import { useState, useRef, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { Fraunces, DM_Sans } from "next/font/google"; // ← Add this import
+
+// ─── Font Configuration ───────────────────────────────────────────────────────
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "900"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-fraunces",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
+  variable: "--font-dm-sans",
+});
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -31,7 +50,7 @@ const makeQuestion = (): Question => ({
   imagePreview: null,
 });
 
-// ─── Question completeness check (single source of truth) ────────────────────
+// ─── Question completeness check ──────────────────────────────────────────────
 
 const isQuestionComplete = (q: Question): boolean =>
   q.question.trim().length > 0 &&
@@ -125,7 +144,7 @@ export default function CreatePage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  // ── Derived state (single source of truth via isQuestionComplete) ─────────
+  // ── Derived state ──────────────────────────────────────────────────────────
 
   const completedCount = questions.filter(isQuestionComplete).length;
   const allQuestionsComplete = completedCount === questions.length && questions.length > 0;
@@ -138,30 +157,28 @@ export default function CreatePage() {
     setGenerating(true);
 
     try {
-      // 1. Get the current session from Supabase
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
       if (sessionError || !session) {
         alert("Please log in to create a quiz");
-        router.push("/login"); // Redirect to login page
+        router.push("/login");
         return;
       }
 
-      // 2. Make the API call with Authorization header
       const res = await fetch("/api/quizzes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.access_token}`, // ✅ Send auth token
+          "Authorization": `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           title: quizTitle,
-          author: "Quiz Creator", // Optional: you can get this from user profile
+          author: "Quiz Creator",
           questions: questions.map((q) => ({
             question: q.question,
             options: q.options.map((o) => o.text),
             correctIndex: q.correctIndex,
-            image: q.imagePreview, // base64
+            image: q.imagePreview,
           })),
         }),
       });
@@ -172,8 +189,6 @@ export default function CreatePage() {
       }
 
       const data = await res.json();
-
-      // 3. Set the generated link
       setGeneratedLink(`${window.location.origin}/quiz/${data.quizId}`);
       alert("Quiz created successfully!");
     } catch (err) {
@@ -196,17 +211,15 @@ export default function CreatePage() {
   const optionColors = ["#a78bfa", "#f472b6", "#34d399", "#fb923c"];
 
   return (
-    <>
+    <div className={`${fraunces.className} ${dmSans.className}`}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300&family=DM+Sans:wght@300;400;500;600&display=swap');
-
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         html, body {
           width: 100%;
           min-height: 100vh;
           background: #070711;
-          font-family: 'DM Sans', sans-serif;
+          font-family: var(--font-dm-sans), sans-serif;
           overflow-x: hidden;
           color: #f1f5f9;
         }
@@ -264,7 +277,7 @@ export default function CreatePage() {
           margin-bottom: 48px;
         }
         .nav-logo {
-          font-family: 'Fraunces', serif;
+          font-family: var(--font-fraunces), serif;
           font-size: 1.05rem;
           color: #a78bfa;
           cursor: pointer;
@@ -304,7 +317,7 @@ export default function CreatePage() {
           margin-bottom: 32px;
         }
         .page-heading {
-          font-family: 'Fraunces', serif;
+          font-family: var(--font-fraunces), serif;
           font-size: clamp(1.8rem, 4vw, 2.4rem);
           font-weight: 900;
           color: #f8fafc;
@@ -340,14 +353,14 @@ export default function CreatePage() {
           border: 1px solid rgba(255,255,255,0.09);
           border-radius: 14px;
           color: #f1f5f9;
-          font-family: 'Fraunces', serif;
+          font-family: var(--font-fraunces), serif;
           font-size: 1.15rem;
           font-weight: 700;
           outline: none;
           transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
           margin-bottom: 32px;
         }
-        .quiz-title-input::placeholder { color: #334155; font-weight: 300; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; }
+        .quiz-title-input::placeholder { color: #334155; font-weight: 300; font-family: var(--font-dm-sans), sans-serif; font-size: 0.95rem; }
         .quiz-title-input:focus {
           border-color: rgba(129,140,248,0.5);
           background: rgba(99,102,241,0.06);
@@ -372,7 +385,7 @@ export default function CreatePage() {
           color: #64748b;
           cursor: pointer;
           transition: all 0.18s;
-          font-family: 'DM Sans', sans-serif;
+          font-family: var(--font-dm-sans), sans-serif;
           position: relative;
         }
         .tab.done::after {
@@ -389,9 +402,9 @@ export default function CreatePage() {
           color: #000;
           font-weight: 700;
           line-height: 14px;
-          text-align: center;
+                    text-align: center;
         }
-                .tab:hover {
+        .tab:hover {
           border-color: rgba(99,102,241,0.4);
           color: #a5b4fc;
         }
@@ -404,7 +417,7 @@ export default function CreatePage() {
           color: #475569;
           cursor: pointer;
           transition: all 0.18s;
-          font-family: 'DM Sans', sans-serif;
+          font-family: var(--font-dm-sans), sans-serif;
           line-height: 1;
         }
         .tab-add:hover { border-color: rgba(99,102,241,0.4); color: #a5b4fc; }
@@ -456,7 +469,7 @@ export default function CreatePage() {
           border: 1px solid rgba(255,255,255,0.09);
           border-radius: 14px;
           color: #f1f5f9;
-          font-family: 'DM Sans', sans-serif;
+          font-family: var(--font-dm-sans), sans-serif;
           font-size: 1rem;
           font-weight: 400;
           outline: none;
@@ -556,7 +569,7 @@ export default function CreatePage() {
           transition: all 0.2s;
           cursor: pointer;
           border: 1.5px solid transparent;
-          font-family: 'DM Sans', sans-serif;
+          font-family: var(--font-dm-sans), sans-serif;
         }
         .option-letter.selected {
           box-shadow: 0 0 12px currentColor;
@@ -568,7 +581,7 @@ export default function CreatePage() {
           border: 1px solid rgba(255,255,255,0.08);
           border-radius: 11px;
           color: #f1f5f9;
-          font-family: 'DM Sans', sans-serif;
+          font-family: var(--font-dm-sans), sans-serif;
           font-size: 0.92rem;
           outline: none;
           transition: border-color 0.2s, background 0.2s;
@@ -597,7 +610,7 @@ export default function CreatePage() {
           color: #475569;
           font-size: 0.75rem;
           cursor: pointer;
-          font-family: 'DM Sans', sans-serif;
+          font-family: var(--font-dm-sans), sans-serif;
           padding: 4px 8px;
           border-radius: 6px;
           transition: all 0.15s;
@@ -610,7 +623,7 @@ export default function CreatePage() {
           padding: 16px 24px;
           border-radius: 14px;
           border: none;
-          font-family: 'DM Sans', sans-serif;
+          font-family: var(--font-dm-sans), sans-serif;
           font-size: 1rem;
           font-weight: 600;
           cursor: pointer;
@@ -722,7 +735,7 @@ export default function CreatePage() {
           border: 1px solid rgba(52,211,153,0.35);
           background: rgba(52,211,153,0.12);
           color: #34d399;
-          font-family: 'DM Sans', sans-serif;
+          font-family: var(--font-dm-sans), sans-serif;
           font-size: 0.82rem;
           font-weight: 500;
           cursor: pointer;
@@ -746,7 +759,7 @@ export default function CreatePage() {
           border: 1px solid rgba(255,255,255,0.08);
           background: rgba(255,255,255,0.04);
           color: #94a3b8;
-          font-family: 'DM Sans', sans-serif;
+          font-family: var(--font-dm-sans), sans-serif;
           font-size: 0.8rem;
           cursor: pointer;
           transition: all 0.2s;
@@ -776,11 +789,11 @@ export default function CreatePage() {
           <span className="nav-step">Create Your own Quiz</span>
         </nav>
 
-        {/* Card */}
+                {/* Card */}
         <div className="card">
           {/* Heading */}
           <div className="title-block">
-                        <h1 className="page-heading">
+            <h1 className="page-heading">
               Build your <span className="accent">quiz</span>
             </h1>
             <p className="page-sub">Add questions, set answers, share with friends.</p>
@@ -1003,6 +1016,6 @@ export default function CreatePage() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
