@@ -52,7 +52,7 @@ export async function POST(req: Request) {
         data: {
           title: body.title,
           author: body.author || "Quiz Creator",
-          userId: user.id, // ✅ CRITICAL: Pass the authenticated user's ID
+          userId: user.id, // CRITICAL: Pass the authenticated user's ID
           totalTime: body.totalTime || 20,
           questions: {
             create: body.questions.map((q: any) => ({

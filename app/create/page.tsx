@@ -2,7 +2,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Fraunces, DM_Sans } from "next/font/google"; // ← Add this import
 
@@ -64,6 +64,45 @@ export default function CreatePage() {
   const router = useRouter();
   const supabase = createClient();
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loadingAuth, setLoadingAuth] = useState(true);
+
+    // ─── ADD THIS: Check Auth on Mount ─────────────────────────────────────────
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.push("/login");
+        return;
+      }
+      setIsAuthenticated(true);
+      setLoadingAuth(false);
+    };
+    checkAuth();
+  }, [router]);
+
+  // ─── ADD THIS: Loading State ───────────────────────────────────────────────
+  if (loadingAuth) {
+    return (
+      <div className={`${fraunces.className} ${dmSans.className}`} style={{
+        minHeight: "100vh",
+        background: "#070711",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#475569",
+      }}>
+        Loading...
+      </div>
+    );
+  }
+
+  // ─── ADD THIS: Redirect if Not Authenticated ───────────────────────────────
+  if (!isAuthenticated) {
+    return null;
+  }
+
+
   const [quizTitle, setQuizTitle] = useState<string>("");
   const [questions, setQuestions] = useState<Question[]>([makeQuestion()]);
   const [activeQ, setActiveQ] = useState<number>(0);
@@ -72,6 +111,9 @@ export default function CreatePage() {
   const [generating, setGenerating] = useState<boolean>(false);
   const [dragOver, setDragOver] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+ 
+
+  
 
   // ── Question Mutations ────────────────────────────────────────────────────
 
