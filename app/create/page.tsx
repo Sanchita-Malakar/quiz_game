@@ -4,7 +4,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Fraunces, DM_Sans } from "next/font/google"; // ← Add this import
+import { Fraunces, DM_Sans } from "next/font/google";
 
 // ─── Font Configuration ───────────────────────────────────────────────────────
 
@@ -67,21 +67,31 @@ export default function CreatePage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loadingAuth, setLoadingAuth] = useState(true);
 
-    // ─── ADD THIS: Check Auth on Mount ─────────────────────────────────────────
+  // ─── Check Auth on Mount ───────────────────────────────────────────────────
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.push("/login");
-        return;
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          setIsAuthenticated(true);
+        }
+      } catch (err) {
+        console.error("Auth check failed:", err);
+      } finally {
+        setLoadingAuth(false);
       }
-      setIsAuthenticated(true);
-      setLoadingAuth(false);
     };
     checkAuth();
-  }, [router]);
+  }, []);
 
-  // ─── ADD THIS: Loading State ───────────────────────────────────────────────
+  // ─── Redirect if Not Authenticated ─────────────────────────────────────────
+  useEffect(() => {
+    if (!loadingAuth && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, loadingAuth, router]);
+
+  // ─── Loading State ─────────────────────────────────────────────────────────
   if (loadingAuth) {
     return (
       <div className={`${fraunces.className} ${dmSans.className}`} style={{
@@ -97,12 +107,12 @@ export default function CreatePage() {
     );
   }
 
-  // ─── ADD THIS: Redirect if Not Authenticated ───────────────────────────────
+  // ─── Redirect if Not Authenticated ─────────────────────────────────────────
   if (!isAuthenticated) {
     return null;
   }
 
-
+  // ─── State & Refs ──────────────────────────────────────────────────────────
   const [quizTitle, setQuizTitle] = useState<string>("");
   const [questions, setQuestions] = useState<Question[]>([makeQuestion()]);
   const [activeQ, setActiveQ] = useState<number>(0);
@@ -111,9 +121,6 @@ export default function CreatePage() {
   const [generating, setGenerating] = useState<boolean>(false);
   const [dragOver, setDragOver] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
- 
-
-  
 
   // ── Question Mutations ────────────────────────────────────────────────────
 
