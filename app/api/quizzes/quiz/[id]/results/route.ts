@@ -4,9 +4,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;  // ✅ Await the params
+
     // Parse request body
     const body = await req.json();
 
@@ -47,7 +49,7 @@ export async function POST(
 
     // Check if quiz exists
     const quiz = await prisma.quiz.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!quiz) {
@@ -60,7 +62,7 @@ export async function POST(
     // Save player result to database
     const result = await prisma.playerResult.create({
       data: {
-        quizId: params.id,
+        quizId: id,
         playerName: playerName.trim(),
         score: score,
         total: total,
