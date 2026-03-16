@@ -98,7 +98,7 @@ export default function LoginPage() {
             email: email.toLowerCase().trim(),
             password,
             options: {
-              emailRedirectTo: `${window.location.origin}/login`,
+              emailRedirectTo: "https://quizgame19.vercel.app/login",
             },
           })
         : await supabase.auth.signInWithPassword({
