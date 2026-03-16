@@ -744,7 +744,7 @@ function HomeContent() {
         <div className="content">
           {/* NAV */}
           <nav className="nav">
-            <span className="nav-logo">KnowMe?</span>
+            <span className="nav-logo">Do-u-Know?</span>
             <span className="nav-badge">✦ Free Forever</span>
           </nav>
 
@@ -752,17 +752,17 @@ function HomeContent() {
           <section className="hero">
             <div className="hero-eyebrow">
                             <span className="dot" />
-              The friendship quiz that doesn&apos;t lie
+              It is the ultimate quiz created by SANCHITA MALAKAR ꨄ 
             </div>
 
             <h1 className="hero-title">
-              How well do your
+              How well do they
               <br />
-              friends <span className="gradient-text">really</span> know you?
+              really <span className="gradient-text">know</span> about it ?
             </h1>
 
             <p className="hero-sub">
-              Build a personalized quiz, share your Game ID, and find out who truly gets you — and who&apos;s been faking it.
+              Build a personalized quiz, share your Game ID, and find out who truly gets it — and who&apos;s been showing up.
             </p>
 
             {/* CTA */}
@@ -908,7 +908,7 @@ function HomeContent() {
 
         {/* FOOTER */}
         <footer className="footer" style={{ position: "relative", zIndex: 1, width: "100%" }}>
-          Made with ♥ — KnowMe? © {new Date().getFullYear()}
+          Made with ♥ — Do-u-Know? © {new Date().getFullYear()}
         </footer>
       </div>
     </>
