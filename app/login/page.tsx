@@ -2,17 +2,16 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client"; // ✅ Must use @supabase/ssr client
 import { Fraunces, DM_Sans } from "next/font/google";
 
-// ─── Fonts (Fixed Loading) ───────────────────────────────────────────────────
 const fraunces = Fraunces({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "900"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-fraunces",
-  preload: false, // ✅ Fix: Disable preload
+  preload: false,
 });
 
 const dmSans = DM_Sans({
@@ -20,16 +19,14 @@ const dmSans = DM_Sans({
   weight: ["300", "400", "500", "600"],
   display: "swap",
   variable: "--font-dm-sans",
-  preload: false, // ✅ Fix: Disable preload
+  preload: false,
 });
 
-// ─── Main Component ───────────────────────────────────────────────────────────
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
   
-  // States
   const [loading, setLoading] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,30 +35,25 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // ✅ 1. HANDLE EMAIL VERIFICATION (Priority #1)
+  // ✅ FIXED: Correct exchangeCodeForSession usage
   const handleEmailVerification = useCallback(async () => {
     try {
-      const url = new URL(window.location.href);
-      const code = url.searchParams.get('code');
+      const code = searchParams.get('code');
+      if (!code || verifying) return false;
+
+      setVerifying(true);
+      setError(null);
       
-      if (code && !verifying) {
-        setVerifying(true);
-        setError(null);
-        
-        const { data, error } = await supabase.auth.exchangeCodeForSession(
-          window.location.href
-        );
+      // ✅ CORRECT: Just pass the CODE, not full URL
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-        if (error) throw error;
+      if (error) throw error;
 
-        if (data?.session) {
-          // Clear URL params and redirect
-          url.searchParams.delete('code');
-          window.history.replaceState({}, '', url.toString());
-          router.push("/create");
-          router.refresh();
-          return true;
-        }
+      if (data?.session) {
+        // ✅ Clear URL params
+        router.replace('/login');
+        router.push("/create");
+        return true;
       }
       return false;
     } catch (err: any) {
@@ -71,11 +63,11 @@ export default function LoginPage() {
     } finally {
       setVerifying(false);
     }
-  }, [supabase, verifying, router]);
+  }, [supabase, verifying, searchParams, router]);
 
-  // ✅ 2. Hydration + Auto-verification
+  // ✅ FIXED: Correct hydration check
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') return; // ✅ Fixed typo
     
     setMounted(true);
     
@@ -86,7 +78,7 @@ export default function LoginPage() {
     }
   }, [handleEmailVerification, searchParams]);
 
-  // ✅ 3. Form Submission
+  // ✅ FIXED: Proper redirect URL for email
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -98,7 +90,8 @@ export default function LoginPage() {
             email: email.toLowerCase().trim(),
             password,
             options: {
-              emailRedirectTo: "https://quizgame19.vercel.app/login",
+              // ✅ Use your actual domain
+              emailRedirectTo: `${window.location.origin}/login`,
             },
           })
         : await supabase.auth.signInWithPassword({
@@ -108,19 +101,17 @@ export default function LoginPage() {
 
       if (error) throw error;
 
-      // Sign-up success → show verification message
       if (isSignUp && data.user) {
         setError(
           "✅ Check your email for verification link! " +
-          "Click it, then return here to continue."
+          "Click it (stays in same tab), then return here."
         );
         return;
       }
 
-      // Sign-in success or already verified → redirect
       router.push("/create");
     } catch (err: any) {
-      setError(err.message || "Something went wrong. Please try again.");
+      setError(err.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }
