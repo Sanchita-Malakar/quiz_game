@@ -17,6 +17,8 @@ model Quiz {
   createdAt DateTime @default(now())
   questions Question[]
   results   PlayerResult[]
+
+  @@map("quiz")   // ← tells Prisma the real table name is "quiz" not "Quiz"
 }
 
 model Question {
@@ -26,6 +28,8 @@ model Question {
   text      String
   image     String?  // Stores Base64 string
   options   Option[]
+
+  @@map("question")
 }
 
 model Option {
@@ -34,6 +38,8 @@ model Option {
   question   Question @relation(fields: [questionId], references: [id])
   text       String
   isCorrect  Boolean
+
+  @@map("option")
 }
 
 
@@ -48,4 +54,6 @@ model PlayerResult {
   timeTaken  Int
   avatar     String
   createdAt  DateTime @default(now())
+
+  @@map("player_result")
 }
